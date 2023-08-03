@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api_key from "./api.env";
+import YouTube from "react-youtube";
 const url = `https://www.googleapis.com/youtube/v3/search?key=${api_key}&part=snippet&maxResults=5`;
 
 const YTvideos = () => {
@@ -19,16 +20,42 @@ const YTvideos = () => {
   }, []);
 
   return (
-    <div>
+    <div className="grid-container">
       {videos.map((video) => {
         return (
-          <div key={video.id}>
-            <h2>{video.snippet.title}</h2>
-            <iframe
-              width="420"
-              height="345"
-              src={`https://www.youtube.com/embed/${video.id.videoId}`}
-            ></iframe>
+          <div
+            key={video.id.videoId}
+            className="video-container"
+            onMouseEnter={() => {
+              const iframe = document.querySelector(`#${video.id.videoId}`);
+              if (iframe) {
+                iframe.contentWindow.postMessage(
+                  '{"event":"command","func":"playVideo","args":""}',
+                  "*"
+                );
+              }
+            }}
+            onMouseLeave={() => {
+              const iframe = document.querySelector(`#${video.id.videoId}`);
+              if (iframe) {
+                iframe.contentWindow.postMessage(
+                  '{"event":"command","func":"pauseVideo","args":""}',
+                  "*"
+                );
+              }
+            }}
+          >
+            <YouTube
+              videoId={video.id.videoId}
+              opts={{
+                playerVars: {
+                  autoplay: 0,
+                },
+              }}
+              className="youtube-video"
+              id={video.id.videoId}
+            />
+            <h3 className="video-title">{video.snippet.title}</h3>
           </div>
         );
       })}

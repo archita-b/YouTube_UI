@@ -27,18 +27,18 @@ const YTvideos = () => {
             key={video.id.videoId}
             className="video-container"
             onMouseEnter={() => {
-              const iframe = document.querySelector(`#${video.id.videoId}`);
-              if (iframe) {
-                iframe.contentWindow.postMessage(
+              const videoClip = document.querySelector(`#${video.id.videoId}`);
+              if (videoClip !== null) {
+                videoClip.contentWindow.postMessage(
                   '{"event":"command","func":"playVideo","args":""}',
                   "*"
                 );
               }
             }}
             onMouseLeave={() => {
-              const iframe = document.querySelector(`#${video.id.videoId}`);
-              if (iframe) {
-                iframe.contentWindow.postMessage(
+              const videoClip = document.querySelector(`#${video.id.videoId}`);
+              if (videoClip !== null) {
+                videoClip.contentWindow.postMessage(
                   '{"event":"command","func":"pauseVideo","args":""}',
                   "*"
                 );
@@ -50,6 +50,7 @@ const YTvideos = () => {
               opts={{
                 playerVars: {
                   autoplay: 0,
+                  // origin: "http://localhost:5173",
                 },
               }}
               className="youtube-video"
